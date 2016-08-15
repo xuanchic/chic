@@ -121,6 +121,11 @@
 
 - (void)refresh
 {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"请等待加载！" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:nil];
+    [alert addAction:action];
+    [self presentViewController:alert animated:YES completion:nil];
+    
     _page += 1;
     NSString *str0 = [NSString stringWithFormat:@"http://app.xiaolann.com/app/qqsay/v1/query.php?type=103&page=%ld",_page];
     NSString *str1 = [NSString stringWithFormat:@"http://app.xiaolann.com/app/qqsay/v1/query.php?type=902&page=%ld",_page];
@@ -148,7 +153,10 @@
         [self.arrModels addObjectsFromArray:arrTemp];
         [self.tableView reloadData];
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-        
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"网络连接失败，请点击重试！" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:nil];
+        [alert addAction:action];
+        [self presentViewController:alert animated:YES completion:nil];
     }];
 }
 

@@ -40,6 +40,10 @@
         [self.tableView reloadData];
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         if (error) {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"网络连接失败，请点击重试！" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:nil];
+            [alert addAction:action];
+            [self presentViewController:alert animated:YES completion:nil];
         }
     }];
 }
@@ -52,11 +56,11 @@
 
 - (void)loadDefaultSetting
 {
-//    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
-//    btn.frame = CGRectMake(0, 0, 15, 15);
-//    [btn setImage:[UIImage imageNamed:@"shuaxin.png"] forState:UIControlStateNormal];
-//    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btn];
-//    [btn addTarget:self action:@selector(refresh) forControlEvents:UIControlEventTouchUpInside];
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
+    btn.frame = CGRectMake(0, 0, 15, 15);
+    [btn setImage:[UIImage imageNamed:@"shuaxin.png"] forState:UIControlStateNormal];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btn];
+    [btn addTarget:self action:@selector(refresh) forControlEvents:UIControlEventTouchUpInside];
     
     UITableView *table = [[UITableView alloc] initWithFrame:self.view.bounds];
     [self.view addSubview:table];
@@ -67,26 +71,35 @@
    
     }
 
-//- (void)refresh
-//{
-//    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
-//    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", nil];
-//    [manager GET:URLSerch parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
-//        NSArray *arrData = responseObject[@"readerModule"][@"itemInfos"];
-//        NSUInteger count = arrData.count;
-//        NSMutableArray *mArrData = [NSMutableArray arrayWithCapacity:count];
-//        for (NSInteger index = 0; index < count; index++) {
-//            NSDictionary *dictData = arrData[index];
-//            ItemInfoModel *model = [ItemInfoModel modelWithDictionary:dictData];
-//            [mArrData addObject:model];
-//        }
-//        [self.arrItemInfoModel addObjectsFromArray:mArrData];
-//        [self.tableView reloadData];
-//    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
-//        if (error) {
-//        }
-//    }];
-//}
+- (void)refresh
+{
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"请等待加载！" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:nil];
+    [alert addAction:action];
+    [self presentViewController:alert animated:YES completion:nil];
+    
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", nil];
+    [manager GET:URLSerch parameters:nil progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        NSArray *arrData = responseObject[@"readerModule"][@"itemInfos"];
+        NSUInteger count = arrData.count;
+        NSMutableArray *mArrData = [NSMutableArray arrayWithCapacity:count];
+        for (NSInteger index = 0; index < count; index++) {
+            NSDictionary *dictData = arrData[index];
+            ItemInfoModel *model = [ItemInfoModel modelWithDictionary:dictData];
+            [mArrData addObject:model];
+        }
+        self.arrItemInfoModel = [NSMutableArray arrayWithArray:mArrData];
+        [self.tableView reloadData];
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        if (error) {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"提示" message:@"网络连接失败，请点击重试！" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:nil];
+            [alert addAction:action];
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+    }];
+}
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
